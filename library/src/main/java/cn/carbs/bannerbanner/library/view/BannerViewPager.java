@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import androidx.viewpager.widget.ViewPager;
 
 public class BannerViewPager extends ViewPager {
+
     private boolean mScrollableBanner = true;
 
     public BannerViewPager(Context context) {
@@ -19,7 +20,7 @@ public class BannerViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (this.mScrollableBanner) {
+        if (mScrollableBanner) {
             if (getCurrentItem() == 0 && getChildCount() == 0) {
                 return false;
             }
@@ -31,7 +32,7 @@ public class BannerViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (this.mScrollableBanner) {
+        if (mScrollableBanner) {
             if (getCurrentItem() == 0 && getChildCount() == 0) {
                 return false;
             }
@@ -42,6 +43,6 @@ public class BannerViewPager extends ViewPager {
     }
 
     public void setScrollable(boolean scrollable) {
-        this.mScrollableBanner = scrollable;
+        mScrollableBanner = scrollable;
     }
 }

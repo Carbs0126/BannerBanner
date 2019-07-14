@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="BannerBanner">
         <attr name="bb_delay_time" format="integer|reference" />
-        <attr name="bb_scroll_time" format="integer|reference" />
         <attr name="bb_is_auto_play" format="boolean|reference" />
         <attr name="bb_title_background" format="color|reference" />
         <attr name="bb_title_text_color" format="color|reference" />

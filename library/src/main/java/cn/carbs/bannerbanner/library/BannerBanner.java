@@ -21,7 +21,6 @@ import android.widget.TextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,8 @@ import cn.carbs.bannerbanner.library.view.BannerViewPager;
 
 
 public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
-    public static final String TAG = "banner";
+
+    public static final String TAG = "BannerBanner";
 
     private Context mContext;
     private BannerViewPager mViewPager;
@@ -46,7 +46,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private ImageLoaderInterface mImageLoader;
     private BannerPagerAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
-    private BannerScroller mScroller;
     private OnBannerListener mListener;
     private DisplayMetrics mDisplayMetrics;
 
@@ -57,14 +56,13 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     private WeakHandler mHandler = new WeakHandler();
 
-    private int mIndicatorMargin = BannerConfig.PADDING_SIZE;
+    private int mIndicatorMargin = BannerConfig.Banner.PADDING_SIZE;
     private int mIndicatorWidth;
     private int mIndicatorHeight;
     private int mIndicatorSize;
     private int mBannerBackgroundImage;
-    private int mBannerStyle = BannerConfig.CIRCLE_INDICATOR;
-    private int mDelayTime = BannerConfig.TIME;
-    private int mScrollTime = BannerConfig.DURATION;
+    private int mBannerStyle = BannerConfig.Style.CIRCLE_INDICATOR;
+    private int mDelayTime = BannerConfig.Banner.TIME;
     private int mIndicatorSelectedResId = R.drawable.banner_banner_gray_radius;
     private int mIndicatorUnselectedResId = R.drawable.banner_banner_white_radius;
     private int mLayoutResId = R.layout.banner_banner_view;
@@ -77,8 +75,8 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private int mGravity = -1;
     private int mLastPosition = 1;
     private int mScaleType = 1;
-    private boolean mIsAutoPlay = BannerConfig.IS_AUTO_PLAY;
-    private boolean mIsScroll = BannerConfig.IS_SCROLL;
+    private boolean mIsAutoPlay = BannerConfig.Banner.IS_AUTO_PLAY;
+    private boolean mIsScroll = BannerConfig.Banner.IS_SCROLL;
 
     public BannerBanner(Context context) {
         this(context, null);
@@ -112,9 +110,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mBannerTitle = findViewById(R.id.banner_banner_title);
         mNumIndicator = findViewById(R.id.banner_banner_number_indicator);
         mNumIndicatorInside = findViewById(R.id.banner_banner_num_indicator_inside);
-        Log.d("wangwang", "banner --> bannerBackgroundImage : " + mBannerBackgroundImage);
         mBannerDefaultImage.setImageResource(mBannerBackgroundImage);
-        initViewPagerScroll();
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
@@ -127,7 +123,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mIndicatorHeight = typedArray.getDimensionPixelSize(
                 R.styleable.BannerBanner_bb_indicator_height, mIndicatorSize);
         mIndicatorMargin = typedArray.getDimensionPixelSize(
-                R.styleable.BannerBanner_bb_indicator_margin, BannerConfig.PADDING_SIZE);
+                R.styleable.BannerBanner_bb_indicator_margin, BannerConfig.Banner.PADDING_SIZE);
         mIndicatorSelectedResId = typedArray.getResourceId(
                 R.styleable.BannerBanner_bb_indicator_drawable_selected, R.drawable.banner_banner_gray_radius);
         mIndicatorUnselectedResId = typedArray.getResourceId(
@@ -135,36 +131,22 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mScaleType = typedArray.getInt(
                 R.styleable.BannerBanner_bb_image_scale_type, mScaleType);
         mDelayTime = typedArray.getInt(
-                R.styleable.BannerBanner_bb_delay_time, BannerConfig.TIME);
-        mScrollTime = typedArray.getInt(
-                R.styleable.BannerBanner_bb_scroll_time, BannerConfig.DURATION);
+                R.styleable.BannerBanner_bb_delay_time, BannerConfig.Banner.TIME);
         mIsAutoPlay = typedArray.getBoolean(
-                R.styleable.BannerBanner_bb_is_auto_play, BannerConfig.IS_AUTO_PLAY);
+                R.styleable.BannerBanner_bb_is_auto_play, BannerConfig.Banner.IS_AUTO_PLAY);
         mTitleBackground = typedArray.getColor(
-                R.styleable.BannerBanner_bb_title_background, BannerConfig.TITLE_BACKGROUND);
+                R.styleable.BannerBanner_bb_title_background, BannerConfig.Title.TITLE_BACKGROUND);
         mTitleHeight = typedArray.getDimensionPixelSize(
-                R.styleable.BannerBanner_bb_title_height, BannerConfig.TITLE_HEIGHT);
+                R.styleable.BannerBanner_bb_title_height, BannerConfig.Title.TITLE_HEIGHT);
         mTitleTextColor = typedArray.getColor(
-                R.styleable.BannerBanner_bb_title_text_color, BannerConfig.TITLE_TEXT_COLOR);
+                R.styleable.BannerBanner_bb_title_text_color, BannerConfig.Title.TITLE_TEXT_COLOR);
         mTitleTextSize = typedArray.getDimensionPixelSize(
-                R.styleable.BannerBanner_bb_title_text_size, BannerConfig.TITLE_TEXT_SIZE);
+                R.styleable.BannerBanner_bb_title_text_size, BannerConfig.Title.TITLE_TEXT_SIZE);
         mLayoutResId = typedArray.getResourceId(
                 R.styleable.BannerBanner_bb_banner_layout, mLayoutResId);
         mBannerBackgroundImage = typedArray.getResourceId(
                 R.styleable.BannerBanner_bb_banner_default_image, 0);
         typedArray.recycle();
-    }
-
-    private void initViewPagerScroll() {
-        try {
-            mScroller = new BannerScroller(mViewPager.getContext());
-            mScroller.setDuration(mScrollTime);
-            Field fieldScroller = ViewPager.class.getDeclaredField("mScroller");
-            fieldScroller.setAccessible(true);
-            fieldScroller.set(mViewPager, mScroller);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
     }
 
     public BannerBanner isAutoPlay(boolean isAutoPlay) {
@@ -184,13 +166,13 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     public BannerBanner setIndicatorGravity(int type) {
         switch (type) {
-            case BannerConfig.LEFT:
+            case BannerConfig.Gravity.LEFT:
                 mGravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
                 break;
-            case BannerConfig.CENTER:
+            case BannerConfig.Gravity.CENTER:
                 mGravity = Gravity.CENTER;
                 break;
-            case BannerConfig.RIGHT:
+            case BannerConfig.Gravity.RIGHT:
                 mGravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
                 break;
         }
@@ -252,7 +234,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public BannerBanner setImages(List<?> imageUrls) {
-        Log.d("wangwang", "setImages() ");
         mImageUrls = imageUrls;
         mCount = imageUrls.size();
         return this;
@@ -317,21 +298,21 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private void setBannerStyleUI() {
         int visibility = mCount > 1 ? View.VISIBLE : View.GONE;
         switch (mBannerStyle) {
-            case BannerConfig.CIRCLE_INDICATOR:
+            case BannerConfig.Style.CIRCLE_INDICATOR:
                 mIndicator.setVisibility(visibility);
                 break;
-            case BannerConfig.NUM_INDICATOR:
+            case BannerConfig.Style.NUM_INDICATOR:
                 mNumIndicator.setVisibility(visibility);
                 break;
-            case BannerConfig.NUM_INDICATOR_TITLE:
+            case BannerConfig.Style.NUM_INDICATOR_TITLE:
                 mNumIndicatorInside.setVisibility(visibility);
                 setTitleStyleUI();
                 break;
-            case BannerConfig.CIRCLE_INDICATOR_TITLE:
+            case BannerConfig.Style.CIRCLE_INDICATOR_TITLE:
                 mIndicator.setVisibility(visibility);
                 setTitleStyleUI();
                 break;
-            case BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE:
+            case BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE:
                 mIndicatorInside.setVisibility(visibility);
                 setTitleStyleUI();
                 break;
@@ -340,13 +321,13 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     private void initImages() {
         mImageViews.clear();
-        if (mBannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE ||
-                mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) {
+        if (mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR ||
+                mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE ||
+                mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE) {
             createIndicator();
-        } else if (mBannerStyle == BannerConfig.NUM_INDICATOR_TITLE) {
+        } else if (mBannerStyle == BannerConfig.Style.NUM_INDICATOR_TITLE) {
             mNumIndicatorInside.setText("1/" + mCount);
-        } else if (mBannerStyle == BannerConfig.NUM_INDICATOR) {
+        } else if (mBannerStyle == BannerConfig.Style.NUM_INDICATOR) {
             mNumIndicator.setText("1/" + mCount);
         }
     }
@@ -354,7 +335,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private void setImageList(List<?> imagesUrl) {
         if (imagesUrl == null || imagesUrl.size() <= 0) {
             mBannerDefaultImage.setVisibility(VISIBLE);
-            Log.d("wangwang", "The image data set is empty.");
             return;
         }
         mBannerDefaultImage.setVisibility(GONE);
@@ -377,10 +357,11 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                 url = imagesUrl.get(i - 1);
             }
             mImageViews.add(imageView);
-            if (mImageLoader != null)
+            if (mImageLoader != null) {
                 mImageLoader.displayImage(mContext, url, imageView);
-            else
+            } else {
                 Log.e(TAG, "Please set images loader.");
+            }
         }
     }
 
@@ -413,7 +394,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                     view.setScaleType(ScaleType.MATRIX);
                     break;
             }
-
         }
     }
 
@@ -433,11 +413,12 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                 imageView.setImageResource(mIndicatorUnselectedResId);
             }
             mIndicatorImages.add(imageView);
-            if (mBannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                    mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE)
+            if (mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR ||
+                    mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE) {
                 mIndicator.addView(imageView, params);
-            else if (mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
+            } else if (mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE) {
                 mIndicatorInside.addView(imageView, params);
+            }
         }
     }
 
@@ -463,13 +444,18 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         }
     }
 
-
     public void startAutoPlay() {
+        if (mHandler == null) {
+            return;
+        }
         mHandler.removeCallbacks(task);
         mHandler.postDelayed(task, mDelayTime);
     }
 
     public void stopAutoPlay() {
+        if (mHandler == null) {
+            return;
+        }
         mHandler.removeCallbacks(task);
     }
 
@@ -511,8 +497,9 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
      */
     public int toRealPosition(int position) {
         int realPosition = (position - 1) % mCount;
-        if (realPosition < 0)
+        if (realPosition < 0) {
             realPosition += mCount;
+        }
         return realPosition;
     }
 
@@ -547,7 +534,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
-
     }
 
     @Override
@@ -588,37 +574,40 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageSelected(toRealPosition(position));
         }
-        if (mBannerStyle == BannerConfig.CIRCLE_INDICATOR ||
-                mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE ||
-                mBannerStyle == BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) {
+        if (mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR ||
+                mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE ||
+                mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE) {
             mIndicatorImages.get((mLastPosition - 1 + mCount) % mCount).setImageResource(mIndicatorUnselectedResId);
             mIndicatorImages.get((position - 1 + mCount) % mCount).setImageResource(mIndicatorSelectedResId);
             mLastPosition = position;
         }
-        if (position == 0) position = mCount;
-        if (position > mCount) position = 1;
+        if (position == 0) {
+            position = mCount;
+        }
+        if (position > mCount) {
+            position = 1;
+        }
         switch (mBannerStyle) {
-            case BannerConfig.CIRCLE_INDICATOR:
+            case BannerConfig.Style.CIRCLE_INDICATOR:
                 break;
-            case BannerConfig.NUM_INDICATOR:
+            case BannerConfig.Style.NUM_INDICATOR:
                 mNumIndicator.setText(position + "/" + mCount);
                 break;
-            case BannerConfig.NUM_INDICATOR_TITLE:
+            case BannerConfig.Style.NUM_INDICATOR_TITLE:
                 mNumIndicatorInside.setText(position + "/" + mCount);
                 mBannerTitle.setText(mTitles.get(position - 1));
                 break;
-            case BannerConfig.CIRCLE_INDICATOR_TITLE:
+            case BannerConfig.Style.CIRCLE_INDICATOR_TITLE:
                 mBannerTitle.setText(mTitles.get(position - 1));
                 break;
-            case BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE:
+            case BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE:
                 mBannerTitle.setText(mTitles.get(position - 1));
                 break;
         }
-
     }
 
     /**
-     * 废弃了旧版接口，新版的接口下标是从1开始，同时解决下标越界问题
+     * 下标是从1开始
      *
      * @param listener
      * @return
@@ -633,6 +622,9 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void releaseBanner() {
+        if (mHandler == null) {
+            return;
+        }
         mHandler.removeCallbacksAndMessages(null);
     }
 

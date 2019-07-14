@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         listView.addHeaderView(banner);
 
         String[] data = getResources().getStringArray(R.array.demo_list);
-        listView.setAdapter(new SampleAdapter(this,data));
+        listView.setAdapter(new SampleAdapter(this, data));
         listView.setOnItemClickListener(this);
 
         //简单使用
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onBannerClick(int position) {
-        Toast.makeText(getApplicationContext(),"你点击了："+position,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "你点击了：" + position, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (position){
+        switch (position) {
             case 1:
                 startActivity(new Intent(this, BannerAnimationActivity.class));
                 break;

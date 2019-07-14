@@ -32,7 +32,7 @@ public class CustomBannerActivity extends AppCompatActivity {
 
         banner3.setImages(App.images)
                 .setBannerTitles(App.titles)
-                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
+                .setBannerStyle(BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE)
                 .setImageLoader(new GlideImageLoader())
                 .start();
     }

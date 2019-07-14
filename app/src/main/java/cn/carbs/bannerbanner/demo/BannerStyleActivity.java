@@ -37,22 +37,22 @@ public class BannerStyleActivity extends AppCompatActivity implements AdapterVie
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                banner.updateBannerStyle(BannerConfig.NOT_INDICATOR);
+                banner.updateBannerStyle(BannerConfig.Style.NOT_INDICATOR);
                 break;
             case 1:
-                banner.updateBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+                banner.updateBannerStyle(BannerConfig.Style.CIRCLE_INDICATOR);
                 break;
             case 2:
-                banner.updateBannerStyle(BannerConfig.NUM_INDICATOR);
+                banner.updateBannerStyle(BannerConfig.Style.NUM_INDICATOR);
                 break;
             case 3:
-                banner.updateBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
+                banner.updateBannerStyle(BannerConfig.Style.NUM_INDICATOR_TITLE);
                 break;
             case 4:
-                banner.updateBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
+                banner.updateBannerStyle(BannerConfig.Style.CIRCLE_INDICATOR_TITLE);
                 break;
             case 5:
-                banner.updateBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
+                banner.updateBannerStyle(BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE);
                 break;
         }
     }

@@ -1,7 +1,6 @@
 package cn.carbs.bannerbanner.demo;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -42,8 +41,9 @@ import cn.carbs.bannerbanner.loader.GlideImageLoader;
 public class BannerAnimationActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, OnBannerListener {
 
     BannerBanner banner;
-    List<Class<? extends ViewPager.PageTransformer>> transformers=new ArrayList<>();
-    public void initData(){
+    List<Class<? extends ViewPager.PageTransformer>> transformers = new ArrayList<>();
+
+    public void initData() {
         transformers.add(DefaultTransformer.class);
         transformers.add(AccordionTransformer.class);
         transformers.add(BackgroundToForegroundTransformer.class);
@@ -62,7 +62,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         transformers.add(ZoomOutTransformer.class);
         transformers.add(ZoomOutSlideTransformer.class);
     }
-   
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
 
         BannerViewPager bannerViewPager = banner.getBannerViewPager();
         bannerViewPager.setPageMargin(20);
-        bannerViewPager.setPadding(60, 0 , 60, 0);
+        bannerViewPager.setPadding(60, 0, 60, 0);
         bannerViewPager.setClipToPadding(false);
 
         ListView listView = (ListView) findViewById(R.id.list);
@@ -80,13 +80,6 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         listView.setAdapter(new SampleAdapter(this, data));
         listView.setOnItemClickListener(this);
 
-        if (App.images == null) {
-            Log.d("wangwang", "app.images == null");
-            return;
-        }
-        for (Object image : App.images) {
-            Log.d("wangwang", "image : " + image);
-        }
         banner.setImages(App.images)
                 .setImageLoader(new GlideImageLoader())
                 .setOnBannerListener(this)
@@ -101,7 +94,6 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
 
     @Override
     public void onBannerClick(int position) {
-        Log.d("wangwang", "click");
-        Toast.makeText(getApplicationContext(),"你点击了："+position,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "你点击了：" + position, Toast.LENGTH_SHORT).show();
     }
 }

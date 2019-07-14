@@ -17,9 +17,4 @@ public class GlideImageLoader extends ImageLoader {
                 .into(imageView);
     }
 
-//    @Override
-//    public ImageView createImageView(Context context) {
-//        //圆角
-//        return new RoundAngleImageView(context);
-//    }
 }

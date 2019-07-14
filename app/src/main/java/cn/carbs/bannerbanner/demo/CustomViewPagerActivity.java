@@ -15,6 +15,7 @@ import cn.carbs.bannerbanner.loader.GlideImageLoader;
 
 public class CustomViewPagerActivity extends AppCompatActivity implements OnBannerListener {
     BannerBanner banner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

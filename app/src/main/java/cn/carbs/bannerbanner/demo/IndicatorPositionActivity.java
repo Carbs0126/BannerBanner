@@ -34,13 +34,13 @@ public class IndicatorPositionActivity extends AppCompatActivity implements Adap
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                banner.setIndicatorGravity(BannerConfig.LEFT);
+                banner.setIndicatorGravity(BannerConfig.Gravity.LEFT);
                 break;
             case 1:
-                banner.setIndicatorGravity(BannerConfig.CENTER);
+                banner.setIndicatorGravity(BannerConfig.Gravity.CENTER);
                 break;
             case 2:
-                banner.setIndicatorGravity(BannerConfig.RIGHT);
+                banner.setIndicatorGravity(BannerConfig.Gravity.RIGHT);
                 break;
         }
         banner.start();

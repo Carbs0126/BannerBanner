@@ -12,7 +12,7 @@ public class SampleAdapter extends BaseAdapter {
     private String[] mDataSet;
     private Context context;
 
-    public SampleAdapter(Context context,String[] dataSet) {
+    public SampleAdapter(Context context, String[] dataSet) {
         this.mDataSet = dataSet;
         this.context = context;
     }
