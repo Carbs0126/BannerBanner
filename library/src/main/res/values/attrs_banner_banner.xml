@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BannerBanner">
+        <attr name="bb_delay_time" format="integer|reference" />
+        <attr name="bb_scroll_time" format="integer|reference" />
+        <attr name="bb_is_auto_play" format="boolean|reference" />
+        <attr name="bb_title_background" format="color|reference" />
+        <attr name="bb_title_text_color" format="color|reference" />
+        <attr name="bb_title_text_size" format="dimension|reference" />
+        <attr name="bb_title_height" format="dimension|reference" />
+        <attr name="bb_indicator_width" format="dimension|reference" />
+        <attr name="bb_indicator_height" format="dimension|reference" />
+        <attr name="bb_indicator_margin" format="dimension|reference" />
+        <attr name="bb_indicator_drawable_selected" format="reference" />
+        <attr name="bb_indicator_drawable_unselected" format="reference" />
+        <attr name="bb_banner_layout" format="reference" />
+        <attr name="bb_banner_default_image" format="reference" />
+        <attr name="bb_image_scale_type" format="enum">
+            <enum name="center" value="0" />
+            <enum name="center_crop" value="1" />
+            <enum name="center_inside" value="2" />
+            <enum name="fit_center" value="3" />
+            <enum name="fit_end" value="4" />
+            <enum name="fit_start" value="5" />
+            <enum name="fit_xy" value="6" />
+            <enum name="matrix" value="7" />
+        </attr>
+    </declare-styleable>
+</resources>
