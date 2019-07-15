@@ -1,4 +1,4 @@
-package cn.carbs.bannerbanner.library;
+package cn.carbs.bannerbanner.library.config;
 
 public class BannerConfig {
 

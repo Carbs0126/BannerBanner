@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import cn.carbs.bannerbanner.App;
 import cn.carbs.bannerbanner.R;
 import cn.carbs.bannerbanner.library.BannerBanner;
-import cn.carbs.bannerbanner.library.BannerConfig;
+import cn.carbs.bannerbanner.library.config.BannerConfig;
 import cn.carbs.bannerbanner.loader.GlideImageLoader;
 
 

@@ -26,6 +26,7 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.carbs.bannerbanner.library.config.BannerConfig;
 import cn.carbs.bannerbanner.library.listener.OnBannerListener;
 import cn.carbs.bannerbanner.library.loader.ImageLoaderInterface;
 
