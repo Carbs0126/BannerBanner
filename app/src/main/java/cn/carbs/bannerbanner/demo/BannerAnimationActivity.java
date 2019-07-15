@@ -73,11 +73,12 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         banner = findViewById(R.id.banner_1);
 
         ViewPager bannerViewPager = banner.getViewPager();
+//        bannerViewPager.setOffscreenPageLimit(3);
         int pageMargin = ViewUtil.dp2px(this, 12);
-//        bannerViewPager.setPageMargin(pageMargin);
+        bannerViewPager.setPageMargin(pageMargin);
         int pagePaddingH = ViewUtil.dp2px(this, 32);
-//        bannerViewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
-//        bannerViewPager.setClipToPadding(false);
+        bannerViewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
+        bannerViewPager.setClipToPadding(false);
 
         ListView listView = findViewById(R.id.list);
         String[] data = getResources().getStringArray(R.array.anim);
@@ -86,7 +87,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
 
         ElegantScaleInOutTransformer transformer = new ElegantScaleInOutTransformer(ViewUtil.getScreenWidth(this), pageMargin, pagePaddingH, App.images.size());
         banner.setImages(App.images)
-//                .setBannerTransformer(transformer)
+                .setBannerTransformer(transformer)
                 .setImageLoader(new GlideImageLoader())
                 .setOnBannerListener(this);
 

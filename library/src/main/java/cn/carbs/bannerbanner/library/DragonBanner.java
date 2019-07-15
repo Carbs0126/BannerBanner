@@ -32,6 +32,7 @@ import cn.carbs.bannerbanner.library.loader.ImageLoaderInterface;
 
 /**
  * 实现原理：adapter 返回 Integer.Max 个 count
+ * // TODO 这个还是有问题的
  */
 public class DragonBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
 
@@ -349,9 +350,10 @@ public class DragonBanner extends FrameLayout implements ViewPager.OnPageChangeL
                 imageView = new ImageView(mContext);
             }
             setScaleType(imageView);
+            imageView.setBackgroundColor(0xffff0088);
             mImageViews.add(imageView);
             if (mImageLoader != null) {
-                mImageLoader.displayImage(mContext, imagesUrl.get(i), imageView);
+//                mImageLoader.displayImage(mContext, imagesUrl.get(i), imageView);
             } else {
                 Log.e(TAG, "Please set images loader.");
             }
@@ -473,7 +475,8 @@ public class DragonBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
         @Override
         public int getCount() {
-            return mImageViews == null ? 0 : Integer.MAX_VALUE;
+//            return mImageViews == null ? 0 : Integer.MAX_VALUE;
+            return mImageViews == null ? 0 : 100;
         }
 
         @Override
@@ -499,9 +502,11 @@ public class DragonBanner extends FrameLayout implements ViewPager.OnPageChangeL
                     }
                 });
             }
-            if (view instanceof ImageView && mImageLoader != null) {
-                mImageLoader.displayImage(mContext, mImageUrls.get(toRealPosition(position)), (ImageView) view);
-            }
+            // TODO
+            view.setBackgroundColor(0xffff0088);
+//            if (view instanceof ImageView && mImageLoader != null) {
+//                mImageLoader.displayImage(mContext, mImageUrls.get(toRealPosition(position)), (ImageView) view);
+//            }
             return view;
         }
 

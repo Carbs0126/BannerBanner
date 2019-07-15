@@ -33,6 +33,7 @@ public class ElegantScaleInOutTransformer implements ViewPager.PageTransformer {
 
     @SuppressLint("NewApi")
     public void transformPage(View view, float position) {
+        Log.d("wangwang", "transformPage()  position : " + position);
         if (position < 1 - mBannerPagerCount) {
             // 暂时规避，目前其它app的做法是，将 ViewPager 初始化定在第 0 page，不能往前翻页
             return;
@@ -40,15 +41,17 @@ public class ElegantScaleInOutTransformer implements ViewPager.PageTransformer {
 
         position = position - mRevisedDeltaPosition;
 
-        if ("5".equals(view.getContentDescription()) || "0".equals(view.getContentDescription())) {
-            Log.d("wangwang", "transformPage view : " + view.getContentDescription() + " revised position : " + position);
-        }
+//        if ("5".equals(view.getContentDescription()) || "0".equals(view.getContentDescription())) {
+//            Log.d("wangwang", "transformPage view : " + view.getContentDescription() + " revised position : " + position);
+//        }
 
         if (position < LEFT_POSITION) {
+            Log.d("wangwang", "position : " + position + " < LEFT_POSITION");
             view.setScaleX(MIN_SCALE);
             view.setScaleY(MIN_SCALE);
             view.setTranslationX(0);
         } else if (position > RIGHT_POSITION) {
+            Log.d("wangwang", "position : " + position + " > RIGHT_POSITION");
             view.setScaleX(MIN_SCALE);
             view.setScaleY(MIN_SCALE);
             view.setTranslationX(0);
@@ -56,6 +59,7 @@ public class ElegantScaleInOutTransformer implements ViewPager.PageTransformer {
             mFactor = getFactorByPositionInCertainRange(position);
             view.setScaleX(mFactor);
             view.setScaleY(mFactor);
+            Log.d("wangwang", "mFactor : " + mFactor + " trans : " + (-mMaxTransX * position));
             view.setTranslationX(-mMaxTransX * position);
         }
     }
