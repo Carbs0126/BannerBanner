@@ -2,6 +2,8 @@ package cn.carbs.bannerbanner.library;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -32,6 +34,7 @@ import cn.carbs.bannerbanner.library.view.BannerViewPager;
 public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     public static final String TAG = "BannerBanner";
+    public static final int HANDLE_MESSAGE_WHAT_TASK = 1;
 
     private Context mContext;
     private BannerViewPager mViewPager;
@@ -54,7 +57,23 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private List<View> mImageViews;
     private List<ImageView> mIndicatorImages;
 
-    private WeakHandler mHandler = new WeakHandler();
+    private Handler mInternalHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == HANDLE_MESSAGE_WHAT_TASK) {
+                if (mCount > 1 && mIsAutoPlay) {
+                    mCurrentItem = mCurrentItem % (mCount + 1) + 1;
+                    if (mCurrentItem == 1) {
+                        mViewPager.setCurrentItem(mCurrentItem, false);
+                        postDelayToUpdateCurrentItem();
+                    } else {
+                        mViewPager.setCurrentItem(mCurrentItem);
+                        postDelayToUpdateCurrentItem();
+                    }
+                }
+            }
+        }
+    };
 
     private int mIndicatorMargin = BannerConfig.Banner.PADDING_SIZE;
     private int mIndicatorWidth;
@@ -280,8 +299,8 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void stop() {
-        if (mHandler != null) {
-            mHandler.removeCallbacks(task);
+        if (mInternalHandler != null) {
+            mInternalHandler.removeMessages(HANDLE_MESSAGE_WHAT_TASK);
         }
     }
 
@@ -435,7 +454,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         }
     }
 
-
     private void setData() {
         mCurrentItem = 1;
         if (mPagerAdapter == null) {
@@ -458,35 +476,23 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void startAutoPlay() {
-        if (mHandler == null) {
+        postDelayToUpdateCurrentItem();
+    }
+
+    private void postDelayToUpdateCurrentItem() {
+        if (mInternalHandler == null) {
             return;
         }
-        mHandler.removeCallbacks(task);
-        mHandler.postDelayed(task, mDelayTime);
+        mInternalHandler.removeMessages(HANDLE_MESSAGE_WHAT_TASK);
+        mInternalHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_WHAT_TASK, mDelayTime);
     }
 
     public void stopAutoPlay() {
-        if (mHandler == null) {
+        if (mInternalHandler == null) {
             return;
         }
-        mHandler.removeCallbacks(task);
+        mInternalHandler.removeMessages(HANDLE_MESSAGE_WHAT_TASK);
     }
-
-    private final Runnable task = new Runnable() {
-        @Override
-        public void run() {
-            if (mCount > 1 && mIsAutoPlay) {
-                mCurrentItem = mCurrentItem % (mCount + 1) + 1;
-                if (mCurrentItem == 1) {
-                    mViewPager.setCurrentItem(mCurrentItem, false);
-                    mHandler.post(task);
-                } else {
-                    mViewPager.setCurrentItem(mCurrentItem);
-                    mHandler.postDelayed(task, mDelayTime);
-                }
-            }
-        }
-    };
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -543,8 +549,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                     }
                 });
             }
-            // WANGWANG TODO
-            view.setContentDescription(String.valueOf(position));
             return view;
         }
 
@@ -634,10 +638,10 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     public void releaseBanner() {
-        if (mHandler == null) {
+        if (mInternalHandler == null) {
             return;
         }
-        mHandler.removeCallbacksAndMessages(null);
+        mInternalHandler.removeMessages(HANDLE_MESSAGE_WHAT_TASK);
     }
 
     public BannerViewPager getBannerViewPager() {
@@ -648,9 +652,10 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     /**
      * 设置当page处于第0个时，是否可以向左滑动
+     *
      * @param canSlideToLeftOfPage0
      */
     public void setCanSlideToLeftOfPage0(boolean canSlideToLeftOfPage0) {
-        
+
     }
 }
