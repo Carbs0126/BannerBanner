@@ -1,4 +1,4 @@
-package cn.carbs.bannerbanner.demo;
+package cn.carbs.bannerbanner.backup;
 
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +16,7 @@ import cn.carbs.bannerbanner.App;
 import cn.carbs.bannerbanner.R;
 import cn.carbs.bannerbanner.SampleAdapter;
 import cn.carbs.bannerbanner.ViewUtil;
-import cn.carbs.bannerbanner.library.DragonBanner;
+import cn.carbs.bannerbanner.library.BannerBanner;
 import cn.carbs.bannerbanner.library.listener.OnBannerListener;
 import cn.carbs.bannerbanner.library.transformer.base.AccordionTransformer;
 import cn.carbs.bannerbanner.library.transformer.base.BackgroundToForegroundTransformer;
@@ -39,11 +39,10 @@ import cn.carbs.bannerbanner.library.transformer.elegant.ElegantScaleInOutTransf
 import cn.carbs.bannerbanner.loader.GlideImageLoader;
 
 
-public class BannerAnimationActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, OnBannerListener {
+public class BannerAnimationActivityBackup extends AppCompatActivity implements AdapterView.OnItemClickListener, OnBannerListener {
 
-    // 换成 BannerBanner 也一样的
-    private DragonBanner banner;
-    private List<Class<? extends ViewPager.PageTransformer>> transformers = new ArrayList<>();
+    BannerBanner banner;
+    List<Class<? extends ViewPager.PageTransformer>> transformers = new ArrayList<>();
 
     public void initData() {
         transformers.add(DefaultTransformer.class);
@@ -74,10 +73,10 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
 
         ViewPager bannerViewPager = banner.getViewPager();
         int pageMargin = ViewUtil.dp2px(this, 12);
-//        bannerViewPager.setPageMargin(pageMargin);
+        bannerViewPager.setPageMargin(pageMargin);
         int pagePaddingH = ViewUtil.dp2px(this, 32);
-//        bannerViewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
-//        bannerViewPager.setClipToPadding(false);
+        bannerViewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
+        bannerViewPager.setClipToPadding(false);
 
         ListView listView = findViewById(R.id.list);
         String[] data = getResources().getStringArray(R.array.anim);
@@ -86,7 +85,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
 
         ElegantScaleInOutTransformer transformer = new ElegantScaleInOutTransformer(ViewUtil.getScreenWidth(this), pageMargin, pagePaddingH, App.images.size());
         banner.setImages(App.images)
-//                .setBannerTransformer(transformer)
+                .setBannerTransformer(transformer)
                 .setImageLoader(new GlideImageLoader())
                 .setOnBannerListener(this);
 

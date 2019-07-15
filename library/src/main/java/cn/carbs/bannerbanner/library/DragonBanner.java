@@ -30,11 +30,11 @@ import cn.carbs.bannerbanner.library.listener.OnBannerListener;
 import cn.carbs.bannerbanner.library.loader.ImageLoaderInterface;
 
 /**
- * 实现原理：前后各添加一个ImageView，造成无限滚动的假象，其中 mImageViews 中多存放 2 个
+ * 实现原理：adapter 返回 Integer.Max 个 count
  */
-public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
+public class DragonBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
 
-    public static final String TAG = "BannerBanner";
+    public static final String TAG = "BannerDragon";
     public static final int HANDLE_MESSAGE_WHAT_TASK = 1;
 
     private Context mContext;
@@ -48,7 +48,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private LinearLayout mTitleView;
 
     private ImageLoaderInterface mImageLoader;
-    private BannerPagerAdapter mPagerAdapter;
+    private BannerDragonPagerAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private OnBannerListener mListener;
     private DisplayMetrics mDisplayMetrics;
@@ -73,9 +73,8 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private int mTitleTextColor;
     private int mTitleTextSize;
     private int mCount = 0;
-    private int mCurrentItem;
     private int mGravity = -1;
-    private int mLastPosition = 1;
+    private int mLastPosition = 0;
     private int mScaleType = BannerConfig.ScaleType.CENTER_CROP;
     private boolean mIsAutoPlay = BannerConfig.Banner.IS_AUTO_PLAY;
 
@@ -83,29 +82,23 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == HANDLE_MESSAGE_WHAT_TASK) {
-                if (mCount > 1 && mIsAutoPlay) {
-                    mCurrentItem = mCurrentItem % (mCount + 1) + 1;
-                    if (mCurrentItem == 1) {
-                        mViewPager.setCurrentItem(mCurrentItem, false);
-                        postDelayToUpdateCurrentItem();
-                    } else {
-                        mViewPager.setCurrentItem(mCurrentItem);
-                        postDelayToUpdateCurrentItem();
-                    }
+                if (mCount > 1 && mIsAutoPlay && mViewPager.getCurrentItem() < Integer.MAX_VALUE) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                    postDelayToUpdateCurrentItem();
                 }
             }
         }
     };
 
-    public BannerBanner(Context context) {
+    public DragonBanner(Context context) {
         this(context, null);
     }
 
-    public BannerBanner(Context context, AttributeSet attrs) {
+    public DragonBanner(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BannerBanner(Context context, AttributeSet attrs, int defStyle) {
+    public DragonBanner(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext = context;
         mTitles = new ArrayList<>();
@@ -168,22 +161,22 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         typedArray.recycle();
     }
 
-    public BannerBanner isAutoPlay(boolean isAutoPlay) {
+    public DragonBanner isAutoPlay(boolean isAutoPlay) {
         mIsAutoPlay = isAutoPlay;
         return this;
     }
 
-    public BannerBanner setImageLoader(ImageLoaderInterface imageLoader) {
+    public DragonBanner setImageLoader(ImageLoaderInterface imageLoader) {
         mImageLoader = imageLoader;
         return this;
     }
 
-    public BannerBanner setDelayTime(int delayTime) {
+    public DragonBanner setDelayTime(int delayTime) {
         mDelayTime = delayTime;
         return this;
     }
 
-    public BannerBanner setIndicatorGravity(int type) {
+    public DragonBanner setIndicatorGravity(int type) {
         switch (type) {
             case BannerConfig.Gravity.LEFT:
                 mGravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
@@ -198,7 +191,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         return this;
     }
 
-    public BannerBanner setBannerTransformer(Class<? extends ViewPager.PageTransformer> transformer) {
+    public DragonBanner setBannerTransformer(Class<? extends ViewPager.PageTransformer> transformer) {
         try {
             setPageTransformer(true, transformer.newInstance());
         } catch (Exception e) {
@@ -207,34 +200,34 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         return this;
     }
 
-    public BannerBanner setBannerTransformer(ViewPager.PageTransformer transformer) {
+    public DragonBanner setBannerTransformer(ViewPager.PageTransformer transformer) {
         setPageTransformer(true, transformer);
         return this;
     }
 
-    public BannerBanner setOffscreenPageLimit(int limit) {
+    public DragonBanner setOffscreenPageLimit(int limit) {
         if (mViewPager != null) {
             mViewPager.setOffscreenPageLimit(limit);
         }
         return this;
     }
 
-    public BannerBanner setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer transformer) {
+    public DragonBanner setPageTransformer(boolean reverseDrawingOrder, ViewPager.PageTransformer transformer) {
         mViewPager.setPageTransformer(reverseDrawingOrder, transformer);
         return this;
     }
 
-    public BannerBanner setBannerTitles(List<String> titles) {
+    public DragonBanner setBannerTitles(List<String> titles) {
         mTitles = titles;
         return this;
     }
 
-    public BannerBanner setBannerStyle(int bannerStyle) {
+    public DragonBanner setBannerStyle(int bannerStyle) {
         mBannerStyle = bannerStyle;
         return this;
     }
 
-    public BannerBanner setImages(List<?> imageUrls) {
+    public DragonBanner setImages(List<?> imageUrls) {
         mImageUrls = imageUrls;
         mCount = imageUrls.size();
         return this;
@@ -266,7 +259,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         start();
     }
 
-    public BannerBanner start() {
+    public DragonBanner start() {
         setBannerStyleUI();
         setImageList(mImageUrls);
         setData();
@@ -346,7 +339,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         }
         mBannerDefaultImage.setVisibility(GONE);
         initImages();
-        for (int i = 0; i <= mCount + 1; i++) {
+        for (int i = 0; i < mCount; i++) {
             View imageView = null;
             if (mImageLoader != null) {
                 imageView = mImageLoader.createImageView(mContext);
@@ -355,17 +348,9 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                 imageView = new ImageView(mContext);
             }
             setScaleType(imageView);
-            Object url = null;
-            if (i == 0) {
-                url = imagesUrl.get(mCount - 1);
-            } else if (i == mCount + 1) {
-                url = imagesUrl.get(0);
-            } else {
-                url = imagesUrl.get(i - 1);
-            }
             mImageViews.add(imageView);
             if (mImageLoader != null) {
-                mImageLoader.displayImage(mContext, url, imageView);
+                mImageLoader.displayImage(mContext, imagesUrl.get(i), imageView);
             } else {
                 Log.e(TAG, "Please set images loader.");
             }
@@ -430,14 +415,13 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     private void setData() {
-        mCurrentItem = 1;
         if (mPagerAdapter == null) {
-            mPagerAdapter = new BannerPagerAdapter();
+            mPagerAdapter = new BannerDragonPagerAdapter();
             mViewPager.addOnPageChangeListener(this);
         }
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setFocusable(true);
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
         if (mGravity != -1) {
             mIndicator.setGravity(mGravity);
         }
@@ -480,25 +464,15 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         return super.dispatchTouchEvent(ev);
     }
 
-    /**
-     * 返回真实的位置
-     *
-     * @param position
-     * @return 下标从0开始
-     */
     public int toRealPosition(int position) {
-        int realPosition = (position - 1) % mCount;
-        if (realPosition < 0) {
-            realPosition += mCount;
-        }
-        return realPosition;
+        return position % mCount;
     }
 
-    class BannerPagerAdapter extends PagerAdapter {
+    class BannerDragonPagerAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
-            return mImageViews == null ? 0 : mImageViews.size();
+            return mImageViews == null ? 0 : Integer.MAX_VALUE;
         }
 
         @Override
@@ -511,8 +485,11 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
             if (mImageViews == null) {
                 return null;
             }
-            container.addView(mImageViews.get(position));
-            View view = mImageViews.get(position);
+            View view = mImageViews.get(toRealPosition(position));
+            if (view.getParent() instanceof ViewGroup) {
+                ((ViewGroup) (view.getParent())).removeView(view);
+            }
+            container.addView(view);
             if (mListener != null) {
                 view.setOnClickListener(new OnClickListener() {
                     @Override
@@ -520,6 +497,9 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                         mListener.onBannerClick(toRealPosition(position));
                     }
                 });
+            }
+            if (view instanceof ImageView && mImageLoader != null) {
+                mImageLoader.displayImage(mContext, mImageUrls.get(toRealPosition(position)), (ImageView) view);
             }
             return view;
         }
@@ -535,24 +515,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageScrollStateChanged(state);
         }
-        switch (state) {
-            case ViewPager.SCROLL_STATE_IDLE:
-                if (mCurrentItem == 0) {
-                    mViewPager.setCurrentItem(mCount, false);
-                } else if (mCurrentItem == mCount + 1) {
-                    mViewPager.setCurrentItem(1, false);
-                }
-                break;
-            case ViewPager.SCROLL_STATE_DRAGGING:
-                if (mCurrentItem == mCount + 1) {
-                    mViewPager.setCurrentItem(1, false);
-                } else if (mCurrentItem == 0) {
-                    mViewPager.setCurrentItem(mCount, false);
-                }
-                break;
-            case ViewPager.SCROLL_STATE_SETTLING:
-                break;
-        }
     }
 
     @Override
@@ -564,43 +526,36 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
-        mCurrentItem = position;
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageSelected(toRealPosition(position));
         }
         if (mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR
                 || mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE
                 || mBannerStyle == BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE) {
-            mIndicatorImages.get((mLastPosition - 1 + mCount) % mCount).setImageResource(mIndicatorUnselectedResId);
-            mIndicatorImages.get((position - 1 + mCount) % mCount).setImageResource(mIndicatorSelectedResId);
+            mIndicatorImages.get(mLastPosition % mCount).setImageResource(mIndicatorUnselectedResId);
+            mIndicatorImages.get(position % mCount).setImageResource(mIndicatorSelectedResId);
             mLastPosition = position;
-        }
-        if (position == 0) {
-            position = mCount;
-        }
-        if (position > mCount) {
-            position = 1;
         }
         switch (mBannerStyle) {
             case BannerConfig.Style.CIRCLE_INDICATOR:
                 break;
             case BannerConfig.Style.NUM_INDICATOR:
-                mNumIndicator.setText(position + "/" + mCount);
+                mNumIndicator.setText(toRealPosition(position) + "/" + mCount);
                 break;
             case BannerConfig.Style.NUM_INDICATOR_TITLE:
                 mNumIndicatorInside.setText(position + "/" + mCount);
-                mBannerTitle.setText(mTitles.get(position - 1));
+                mBannerTitle.setText(mTitles.get(toRealPosition(position)));
                 break;
             case BannerConfig.Style.CIRCLE_INDICATOR_TITLE:
-                mBannerTitle.setText(mTitles.get(position - 1));
+                mBannerTitle.setText(mTitles.get(toRealPosition(position)));
                 break;
             case BannerConfig.Style.CIRCLE_INDICATOR_TITLE_INSIDE:
-                mBannerTitle.setText(mTitles.get(position - 1));
+                mBannerTitle.setText(mTitles.get(toRealPosition(position)));
                 break;
         }
     }
 
-    public BannerBanner setOnBannerListener(OnBannerListener listener) {
+    public DragonBanner setOnBannerListener(OnBannerListener listener) {
         mListener = listener;
         return this;
     }

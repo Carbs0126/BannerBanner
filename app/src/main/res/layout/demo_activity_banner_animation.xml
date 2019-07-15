@@ -4,15 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.carbs.bannerbanner.library.BannerBanner
-        android:background="#ff000000"
+    <cn.carbs.bannerbanner.library.DragonBanner
         android:id="@+id/banner_1"
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+        android:layout_height="160dp"
+        android:background="#ff000000" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"/>
+        android:divider="@null" />
 </LinearLayout>
