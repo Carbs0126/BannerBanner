@@ -2,23 +2,23 @@ package cn.carbs.bannerbanner.library;
 
 import androidx.viewpager.widget.ViewPager;
 
-import cn.carbs.bannerbanner.library.transformer.DefaultTransformer;
-import cn.carbs.bannerbanner.library.transformer.AccordionTransformer;
-import cn.carbs.bannerbanner.library.transformer.BackgroundToForegroundTransformer;
-import cn.carbs.bannerbanner.library.transformer.CubeInTransformer;
-import cn.carbs.bannerbanner.library.transformer.CubeOutTransformer;
-import cn.carbs.bannerbanner.library.transformer.DepthPageTransformer;
-import cn.carbs.bannerbanner.library.transformer.FlipHorizontalTransformer;
-import cn.carbs.bannerbanner.library.transformer.FlipVerticalTransformer;
-import cn.carbs.bannerbanner.library.transformer.ForegroundToBackgroundTransformer;
-import cn.carbs.bannerbanner.library.transformer.RotateDownTransformer;
-import cn.carbs.bannerbanner.library.transformer.RotateUpTransformer;
-import cn.carbs.bannerbanner.library.transformer.ScaleInOutTransformer;
-import cn.carbs.bannerbanner.library.transformer.StackTransformer;
-import cn.carbs.bannerbanner.library.transformer.TabletTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomInTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomOutSlideTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.DefaultTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.AccordionTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.BackgroundToForegroundTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.CubeInTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.CubeOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.DepthPageTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.FlipHorizontalTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.FlipVerticalTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ForegroundToBackgroundTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.RotateDownTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.RotateUpTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ScaleInOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.StackTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.TabletTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomInTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomOutSlideTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomOutTransformer;
 
 public class Transformer {
     public static Class<? extends ViewPager.PageTransformer> Default = DefaultTransformer.class;

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package cn.carbs.bannerbanner.library.transformer;
+package cn.carbs.bannerbanner.library.transformer.base;
 
 import android.view.View;
 
-public class AccordionTransformer extends ABaseTransformer {
+public class StackTransformer extends ABaseTransformer {
 
     @Override
     protected void onTransform(View view, float position) {
-        view.setPivotX(position < 0 ? 0 : view.getWidth());
-        view.setScaleX(position < 0 ? 1f + position : 1f - position);
+        view.setTranslationX(position < 0 ? 0f : -view.getWidth() * position);
     }
 
 }

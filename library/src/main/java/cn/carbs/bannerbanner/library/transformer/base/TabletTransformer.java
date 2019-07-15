@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.carbs.bannerbanner.library.transformer;
+package cn.carbs.bannerbanner.library.transformer.base;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;

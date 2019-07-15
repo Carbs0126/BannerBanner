@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package cn.carbs.bannerbanner.library.transformer;
+package cn.carbs.bannerbanner.library.transformer.base;
 
 import android.view.View;
 
-public class StackTransformer extends ABaseTransformer {
+public class BackgroundToForegroundTransformer extends ABaseTransformer {
 
     @Override
     protected void onTransform(View view, float position) {
-        view.setTranslationX(position < 0 ? 0f : -view.getWidth() * position);
+        final float height = view.getHeight();
+        final float width = view.getWidth();
+        final float scale = min(position < 0 ? 1f : Math.abs(1f - position), 0.5f);
+
+        view.setScaleX(scale);
+        view.setScaleY(scale);
+        view.setPivotX(width * 0.5f);
+        view.setPivotY(height * 0.5f);
+        view.setTranslationX(position < 0 ? width * position : -width * position * 0.25f);
     }
 
 }

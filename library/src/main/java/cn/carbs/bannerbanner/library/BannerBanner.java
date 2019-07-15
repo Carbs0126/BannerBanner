@@ -179,7 +179,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         return this;
     }
 
-    public BannerBanner setBannerAnimation(Class<? extends ViewPager.PageTransformer> transformer) {
+    public BannerBanner setBannerTransformer(Class<? extends ViewPager.PageTransformer> transformer) {
         try {
             setPageTransformer(true, transformer.newInstance());
         } catch (Exception e) {
@@ -187,6 +187,12 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         }
         return this;
     }
+
+    public BannerBanner setBannerTransformer(ViewPager.PageTransformer transformer) {
+        setPageTransformer(true, transformer);
+        return this;
+    }
+
 
     /**
      * Set the number of pages that should be retained to either side of the
@@ -270,6 +276,12 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         setImageList(mImageUrls);
         setData();
         return this;
+    }
+
+    public void stop() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(task);
+        }
     }
 
     private void setTitleStyleUI() {
@@ -507,7 +519,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
         @Override
         public int getCount() {
-            return mImageViews.size();
+            return mImageViews == null ? 0 : mImageViews.size();
         }
 
         @Override
@@ -517,6 +529,9 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
+            if (mImageViews == null) {
+                return 0;
+            }
             container.addView(mImageViews.get(position));
             View view = mImageViews.get(position);
             if (mListener != null) {
@@ -527,6 +542,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                     }
                 });
             }
+            view.setContentDescription(String.valueOf(position));
             return view;
         }
 
@@ -606,12 +622,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         }
     }
 
-    /**
-     * 下标是从1开始
-     *
-     * @param listener
-     * @return
-     */
     public BannerBanner setOnBannerListener(OnBannerListener listener) {
         mListener = listener;
         return this;

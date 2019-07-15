@@ -1,6 +1,7 @@
 package cn.carbs.bannerbanner.demo;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,25 +16,27 @@ import java.util.List;
 import cn.carbs.bannerbanner.App;
 import cn.carbs.bannerbanner.R;
 import cn.carbs.bannerbanner.SampleAdapter;
+import cn.carbs.bannerbanner.ViewUtil;
 import cn.carbs.bannerbanner.library.BannerBanner;
 import cn.carbs.bannerbanner.library.listener.OnBannerListener;
-import cn.carbs.bannerbanner.library.transformer.AccordionTransformer;
-import cn.carbs.bannerbanner.library.transformer.BackgroundToForegroundTransformer;
-import cn.carbs.bannerbanner.library.transformer.CubeInTransformer;
-import cn.carbs.bannerbanner.library.transformer.CubeOutTransformer;
-import cn.carbs.bannerbanner.library.transformer.DefaultTransformer;
-import cn.carbs.bannerbanner.library.transformer.DepthPageTransformer;
-import cn.carbs.bannerbanner.library.transformer.FlipHorizontalTransformer;
-import cn.carbs.bannerbanner.library.transformer.FlipVerticalTransformer;
-import cn.carbs.bannerbanner.library.transformer.ForegroundToBackgroundTransformer;
-import cn.carbs.bannerbanner.library.transformer.RotateDownTransformer;
-import cn.carbs.bannerbanner.library.transformer.RotateUpTransformer;
-import cn.carbs.bannerbanner.library.transformer.ScaleInOutTransformer;
-import cn.carbs.bannerbanner.library.transformer.StackTransformer;
-import cn.carbs.bannerbanner.library.transformer.TabletTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomInTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomOutSlideTransformer;
-import cn.carbs.bannerbanner.library.transformer.ZoomOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.AccordionTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.BackgroundToForegroundTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.CubeInTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.CubeOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.DefaultTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.DepthPageTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.FlipHorizontalTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.FlipVerticalTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ForegroundToBackgroundTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.RotateDownTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.RotateUpTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ScaleInOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.StackTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.TabletTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomInTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomOutSlideTransformer;
+import cn.carbs.bannerbanner.library.transformer.base.ZoomOutTransformer;
+import cn.carbs.bannerbanner.library.transformer.elegant.ElegantScaleInOutTransformer;
 import cn.carbs.bannerbanner.library.view.BannerViewPager;
 import cn.carbs.bannerbanner.loader.GlideImageLoader;
 
@@ -48,7 +51,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         transformers.add(AccordionTransformer.class);
         transformers.add(BackgroundToForegroundTransformer.class);
         transformers.add(ForegroundToBackgroundTransformer.class);
-        transformers.add(CubeInTransformer.class);//兼容问题，慎用
+        transformers.add(CubeInTransformer.class);// 兼容问题，慎用
         transformers.add(CubeOutTransformer.class);
         transformers.add(DepthPageTransformer.class);
         transformers.add(FlipHorizontalTransformer.class);
@@ -68,28 +71,47 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.demo_activity_banner_animation);
         initData();
-        banner = (BannerBanner) findViewById(R.id.banner_1);
+        banner = findViewById(R.id.banner_1);
 
         BannerViewPager bannerViewPager = banner.getBannerViewPager();
-        bannerViewPager.setPageMargin(20);
-        bannerViewPager.setPadding(60, 0, 60, 0);
+        int pageMargin = ViewUtil.dp2px(this, 12);
+        bannerViewPager.setPageMargin(pageMargin);
+        int pagePaddingH = ViewUtil.dp2px(this, 32);
+        bannerViewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
         bannerViewPager.setClipToPadding(false);
 
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = findViewById(R.id.list);
         String[] data = getResources().getStringArray(R.array.anim);
         listView.setAdapter(new SampleAdapter(this, data));
         listView.setOnItemClickListener(this);
 
+        float revisedDeltaPosition = (float) (pagePaddingH) / (ViewUtil.getScreenWidth(this) - pagePaddingH * 2);
+        Log.d("wangwang", "pageMargin : " + pageMargin + " pagePaddingH : " + pagePaddingH + " ScreenWidth : " + ViewUtil.getScreenWidth(this));
+        Log.d("wangwang", "revisedDeltaPosition : " + revisedDeltaPosition);
+
         banner.setImages(App.images)
+//                .setBannerAnimation(DefaultTransformer.class)
+                .setBannerTransformer(new ElegantScaleInOutTransformer(revisedDeltaPosition, pagePaddingH - pageMargin))
                 .setImageLoader(new GlideImageLoader())
-                .setOnBannerListener(this)
-                .start();
+                .setOnBannerListener(this);
 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        banner.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        banner.stop();
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        banner.setBannerAnimation(transformers.get(position));
+        banner.setBannerTransformer(transformers.get(position));
     }
 
     @Override
