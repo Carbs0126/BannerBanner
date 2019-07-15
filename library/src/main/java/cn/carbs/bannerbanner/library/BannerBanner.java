@@ -28,8 +28,6 @@ import java.util.List;
 
 import cn.carbs.bannerbanner.library.listener.OnBannerListener;
 import cn.carbs.bannerbanner.library.loader.ImageLoaderInterface;
-import cn.carbs.bannerbanner.library.view.BannerViewPager;
-
 
 public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
 
@@ -37,7 +35,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     public static final int HANDLE_MESSAGE_WHAT_TASK = 1;
 
     private Context mContext;
-    private BannerViewPager mViewPager;
+    private ViewPager mViewPager;
     private ImageView mBannerDefaultImage;
     private TextView mBannerTitle;
     private TextView mNumIndicatorInside;
@@ -464,11 +462,6 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mViewPager.setCurrentItem(1);
         if (mGravity != -1)
             mIndicator.setGravity(mGravity);
-        if (mIsScroll && mCount > 1) {
-            mViewPager.setScrollable(true);
-        } else {
-            mViewPager.setScrollable(false);
-        }
         if (mIsAutoPlay) {
             startAutoPlay();
         }
@@ -643,7 +636,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mInternalHandler.removeMessages(HANDLE_MESSAGE_WHAT_TASK);
     }
 
-    public BannerViewPager getBannerViewPager() {
+    public ViewPager getViewPager() {
         return mViewPager;
     }
 

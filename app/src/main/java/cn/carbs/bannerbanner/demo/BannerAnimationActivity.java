@@ -36,7 +36,6 @@ import cn.carbs.bannerbanner.library.transformer.base.ZoomInTransformer;
 import cn.carbs.bannerbanner.library.transformer.base.ZoomOutSlideTransformer;
 import cn.carbs.bannerbanner.library.transformer.base.ZoomOutTransformer;
 import cn.carbs.bannerbanner.library.transformer.elegant.ElegantScaleInOutTransformer;
-import cn.carbs.bannerbanner.library.view.BannerViewPager;
 import cn.carbs.bannerbanner.loader.GlideImageLoader;
 
 
@@ -72,7 +71,7 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         initData();
         banner = findViewById(R.id.banner_1);
 
-        BannerViewPager bannerViewPager = banner.getBannerViewPager();
+        ViewPager bannerViewPager = banner.getViewPager();
         int pageMargin = ViewUtil.dp2px(this, 12);
         bannerViewPager.setPageMargin(pageMargin);
         int pagePaddingH = ViewUtil.dp2px(this, 32);

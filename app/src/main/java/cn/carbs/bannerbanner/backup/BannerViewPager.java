@@ -1,4 +1,4 @@
-package cn.carbs.bannerbanner.library.view;
+package cn.carbs.bannerbanner.backup;
 
 import android.content.Context;
 import android.util.AttributeSet;
