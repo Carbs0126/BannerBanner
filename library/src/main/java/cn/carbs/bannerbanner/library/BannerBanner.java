@@ -93,8 +93,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private int mCurrentItem;
     private int mGravity = -1;
     private int mLastPosition = 1;
-    // TODO 与imageview统一
-    private int mScaleType = 1;
+    private int mScaleType = BannerConfig.ScaleType.CENTER_CROP;
     private boolean mIsAutoPlay = BannerConfig.Banner.IS_AUTO_PLAY;
     private boolean mIsScroll = BannerConfig.Banner.IS_SCROLL;
 
@@ -149,7 +148,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         mIndicatorUnselectedResId = typedArray.getResourceId(
                 R.styleable.BannerBanner_bb_indicator_drawable_unselected, R.drawable.banner_banner_white_radius);
         mScaleType = typedArray.getInt(
-                R.styleable.BannerBanner_bb_image_scale_type, mScaleType);
+                R.styleable.BannerBanner_bb_image_scale_type, BannerConfig.ScaleType.CENTER_CROP);
         mDelayTime = typedArray.getInt(
                 R.styleable.BannerBanner_bb_delay_time, BannerConfig.Banner.TIME);
         mIsAutoPlay = typedArray.getBoolean(
@@ -401,28 +400,28 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
         if (imageView instanceof ImageView) {
             ImageView view = ((ImageView) imageView);
             switch (mScaleType) {
-                case 0:
+                case BannerConfig.ScaleType.CENTER:
                     view.setScaleType(ScaleType.CENTER);
                     break;
-                case 1:
+                case BannerConfig.ScaleType.CENTER_CROP:
                     view.setScaleType(ScaleType.CENTER_CROP);
                     break;
-                case 2:
+                case BannerConfig.ScaleType.CENTER_INSIDE:
                     view.setScaleType(ScaleType.CENTER_INSIDE);
                     break;
-                case 3:
+                case BannerConfig.ScaleType.FIT_CENTER:
                     view.setScaleType(ScaleType.FIT_CENTER);
                     break;
-                case 4:
+                case BannerConfig.ScaleType.FIT_END:
                     view.setScaleType(ScaleType.FIT_END);
                     break;
-                case 5:
+                case BannerConfig.ScaleType.FIT_START:
                     view.setScaleType(ScaleType.FIT_START);
                     break;
-                case 6:
+                case BannerConfig.ScaleType.FIT_XY:
                     view.setScaleType(ScaleType.FIT_XY);
                     break;
-                case 7:
+                case BannerConfig.ScaleType.MATRIX:
                     view.setScaleType(ScaleType.MATRIX);
                     break;
             }
