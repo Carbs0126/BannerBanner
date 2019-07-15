@@ -74,6 +74,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
     private int mCurrentItem;
     private int mGravity = -1;
     private int mLastPosition = 1;
+    // TODO 与imageview统一
     private int mScaleType = 1;
     private boolean mIsAutoPlay = BannerConfig.Banner.IS_AUTO_PLAY;
     private boolean mIsScroll = BannerConfig.Banner.IS_SCROLL;
@@ -542,6 +543,7 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
                     }
                 });
             }
+            // WANGWANG TODO
             view.setContentDescription(String.valueOf(position));
             return view;
         }
@@ -640,5 +642,15 @@ public class BannerBanner extends FrameLayout implements ViewPager.OnPageChangeL
 
     public BannerViewPager getBannerViewPager() {
         return mViewPager;
+    }
+
+    // todo
+
+    /**
+     * 设置当page处于第0个时，是否可以向左滑动
+     * @param canSlideToLeftOfPage0
+     */
+    public void setCanSlideToLeftOfPage0(boolean canSlideToLeftOfPage0) {
+        
     }
 }

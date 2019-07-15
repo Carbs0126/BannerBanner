@@ -1,7 +1,6 @@
 package cn.carbs.bannerbanner.demo;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -85,13 +84,9 @@ public class BannerAnimationActivity extends AppCompatActivity implements Adapte
         listView.setAdapter(new SampleAdapter(this, data));
         listView.setOnItemClickListener(this);
 
-        float revisedDeltaPosition = (float) (pagePaddingH) / (ViewUtil.getScreenWidth(this) - pagePaddingH * 2);
-        Log.d("wangwang", "pageMargin : " + pageMargin + " pagePaddingH : " + pagePaddingH + " ScreenWidth : " + ViewUtil.getScreenWidth(this));
-        Log.d("wangwang", "revisedDeltaPosition : " + revisedDeltaPosition);
-
+        ElegantScaleInOutTransformer transformer = new ElegantScaleInOutTransformer(ViewUtil.getScreenWidth(this), pageMargin, pagePaddingH, App.images.size());
         banner.setImages(App.images)
-//                .setBannerAnimation(DefaultTransformer.class)
-                .setBannerTransformer(new ElegantScaleInOutTransformer(revisedDeltaPosition, pagePaddingH - pageMargin))
+                .setBannerTransformer(transformer)
                 .setImageLoader(new GlideImageLoader())
                 .setOnBannerListener(this);
 

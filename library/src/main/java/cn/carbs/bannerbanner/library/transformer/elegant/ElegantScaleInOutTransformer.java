@@ -6,6 +6,12 @@ import android.view.View;
 
 import androidx.viewpager.widget.ViewPager;
 
+/**
+ * 需要在代码外边对ViewPager添加如下代码：
+ *      viewPager.setPageMargin(pageMargin);
+ *      viewPager.setPadding(pagePaddingH, 0, pagePaddingH, 0);
+ *      viewPager.setClipToPadding(false);
+ */
 public class ElegantScaleInOutTransformer implements ViewPager.PageTransformer {
 
     private static final float MIN_SCALE = 0.85f;
@@ -17,20 +23,24 @@ public class ElegantScaleInOutTransformer implements ViewPager.PageTransformer {
     private float mRevisedDeltaPosition;
     private float mMaxTransX;
     private float mFactor;
+    private int mBannerPagerCount = 5;
 
-    public ElegantScaleInOutTransformer() {
-    }
-
-    public ElegantScaleInOutTransformer(float revisedDeltaPosition, float maxTransX) {
-        mRevisedDeltaPosition = revisedDeltaPosition;
-        mMaxTransX = maxTransX;
+    public ElegantScaleInOutTransformer(float pagerWidth, float pageMargin, float pagerPaddingHorizontal, int bannerPagerCount) {
+        mRevisedDeltaPosition = pagerPaddingHorizontal / (pagerWidth - pagerPaddingHorizontal * 2);
+        mMaxTransX = pagerPaddingHorizontal - pageMargin;
+        mBannerPagerCount = bannerPagerCount;
     }
 
     @SuppressLint("NewApi")
     public void transformPage(View view, float position) {
+        if (position < 1 - mBannerPagerCount) {
+            // 暂时规避，目前其它app的做法是，将 ViewPager 初始化定在第 0 page，不能往前翻页
+            return;
+        }
+
         position = position - mRevisedDeltaPosition;
 
-        if ("2".equals(view.getContentDescription())) {
+        if ("5".equals(view.getContentDescription()) || "0".equals(view.getContentDescription())) {
             Log.d("wangwang", "transformPage view : " + view.getContentDescription() + " revised position : " + position);
         }
 
